@@ -69,7 +69,7 @@ func getPassphrase(vaultPath string) (string, error) {
 
 	// Fall back to interactive prompt
 	fmt.Print("Passphrase: ")
-	raw, err := term.ReadPassword(0)
+	raw, err := term.ReadPassword(int(os.Stdin.Fd()))
 	fmt.Println()
 	if err != nil {
 		return "", fmt.Errorf("reading passphrase: %w", err)

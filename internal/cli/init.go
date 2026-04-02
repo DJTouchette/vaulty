@@ -19,7 +19,7 @@ func promptNewPassphrase() (string, error) {
 		return pass, nil
 	}
 	fmt.Print("Set your passphrase: ")
-	raw, err := term.ReadPassword(0)
+	raw, err := term.ReadPassword(int(os.Stdin.Fd()))
 	fmt.Println()
 	if err != nil {
 		return "", fmt.Errorf("reading passphrase: %w", err)
