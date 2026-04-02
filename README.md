@@ -42,18 +42,43 @@ vaulty stop
 
 ## MCP Server (Claude Code / Cursor)
 
-Vaulty runs as an MCP server for direct integration with AI agents.
+Vaulty runs as an MCP server for direct integration with AI agents. Claude Code / Cursor spawns the process automatically — you don't need to run the server yourself.
 
-### Claude Code
+### Quick setup
 
-Add to your MCP config (`~/.claude/claude_desktop_config.json` or project `.mcp.json`):
+```bash
+# In your project directory:
+vaulty mcp init
+
+# Or target a specific project:
+vaulty mcp init --dir ~/work/my-project
+```
+
+This writes a `.mcp.json` file that Claude Code and Cursor discover automatically.
+
+### Manual setup
+
+Add to your project's `.mcp.json`:
 
 ```json
 {
   "mcpServers": {
     "vaulty": {
       "command": "vaulty",
-      "args": ["mcp"],
+      "args": ["mcp", "start"]
+    }
+  }
+}
+```
+
+If your passphrase is saved in the OS keychain (`vaulty keychain save`), no env vars are needed. Otherwise, add `VAULTY_PASSPHRASE`:
+
+```json
+{
+  "mcpServers": {
+    "vaulty": {
+      "command": "vaulty",
+      "args": ["mcp", "start"],
       "env": {
         "VAULTY_PASSPHRASE": "your-passphrase"
       }
@@ -62,19 +87,14 @@ Add to your MCP config (`~/.claude/claude_desktop_config.json` or project `.mcp.
 }
 ```
 
-### Cursor
-
-Add to your Cursor MCP settings:
+For team mode, pass the identity file:
 
 ```json
 {
   "mcpServers": {
     "vaulty": {
       "command": "vaulty",
-      "args": ["mcp"],
-      "env": {
-        "VAULTY_PASSPHRASE": "your-passphrase"
-      }
+      "args": ["mcp", "start", "-i", "/home/you/age-key.txt"]
     }
   }
 }
@@ -181,7 +201,7 @@ vaulty start
   "mcpServers": {
     "vaulty": {
       "command": "vaulty",
-      "args": ["mcp", "-i", "/home/you/age-key.txt"]
+      "args": ["mcp", "start", "-i", "/home/you/age-key.txt"]
     }
   }
 }
@@ -210,15 +230,28 @@ When recipients are configured, the vault is encrypted using age X25519 keys. Wh
 | `vaulty stop` | Stop the daemon (zeroes secrets from memory) |
 | `vaulty proxy <METHOD> <URL>` | Make an authenticated HTTP request |
 | `vaulty exec -- <command>` | Run a command with secrets injected |
-| `vaulty mcp` | Start as an MCP server (stdio) |
+| `vaulty mcp start` | Start as an MCP server (stdio) |
+| `vaulty mcp init` | Write `.mcp.json` for Claude Code / Cursor |
 | `vaulty keychain save\|delete\|status` | Manage passphrase in OS keychain |
 | `vaulty team add\|list\|remove` | Manage team recipients |
+| `vaulty backend list\|secrets\|pull` | Manage cloud secret backends |
+| `vaulty export --out <file>` | Export vault as encrypted snapshot |
+| `vaulty import --from <file>` | Import secrets from encrypted snapshot |
+| `vaulty export-env` | Export secrets as `.env` format |
+| `vaulty import-env --from <file>` | Import secrets from a `.env` file |
+| `vaulty export-docker` | Export secrets for Docker/Compose |
+| `vaulty import-docker --from <file>` | Import env vars from `docker-compose.yml` |
+| `vaulty export-k8s` | Export secrets as Kubernetes Secret manifest |
+| `vaulty import-k8s --from <file>` | Import secrets from Kubernetes Secret |
+| `vaulty export-rails` | Export secrets as Rails credentials YAML |
+| `vaulty import-rails` | Import secrets from Rails encrypted credentials |
 
 ### Global flags
 
 | Flag | Description |
 |------|-------------|
 | `-i, --identity <file>` | Age private key file for team vault decryption |
+| `-V, --vault <name>` | Named vault to use (stored in `vaults/<name>.age`) |
 
 ## Security Model
 
