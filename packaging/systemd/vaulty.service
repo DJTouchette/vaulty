@@ -1,0 +1,20 @@
+[Unit]
+Description=Vaulty - Secrets proxy for AI coding agents
+Documentation=https://github.com/djtouchette/vaulty
+After=default.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/vaulty start --foreground
+ExecStop=/usr/bin/vaulty stop
+Restart=on-failure
+RestartSec=5
+# Security hardening
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=%h/.config/vaulty
+PrivateTmp=yes
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=default.target

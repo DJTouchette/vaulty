@@ -1,0 +1,16 @@
+# Resend Email API
+#
+# Resend uses Bearer token authentication for sending emails and
+# managing domains. The API key (re_...) is injected as an
+# Authorization: Bearer header on every request to api.resend.com.
+#
+# Usage:
+#   1. Copy the [secrets.RESEND_API_KEY] block below into your vaulty.toml
+#   2. Run: vaulty set RESEND_API_KEY
+#   3. Paste your Resend API key when prompted
+#
+# Docs: https://resend.com/docs/api-reference/introduction
+
+[secrets.RESEND_API_KEY]
+allowed_domains = ["api.resend.com"]
+inject_as = "bearer"

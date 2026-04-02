@@ -1,0 +1,19 @@
+# Twilio API
+#
+# Twilio uses HTTP Basic authentication. The credentials are your
+# Account SID (username) and Auth Token (password), combined as
+# AccountSID:AuthToken and base64-encoded in the Authorization header.
+#
+# Store the combined "AccountSID:AuthToken" string as a single secret.
+# Vaulty will base64-encode it and set the Authorization: Basic header.
+#
+# Usage:
+#   1. Copy the [secrets.TWILIO_CREDENTIALS] block below into your vaulty.toml
+#   2. Run: vaulty set TWILIO_CREDENTIALS
+#   3. Paste your credentials as "ACxxxxxxxx:your_auth_token" when prompted
+#
+# Docs: https://www.twilio.com/docs/usage/security#http-authentication
+
+[secrets.TWILIO_CREDENTIALS]
+allowed_domains = ["api.twilio.com"]
+inject_as = "basic"

@@ -1,0 +1,19 @@
+services:
+  localstack:
+    image: localstack/localstack:4.4
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=secretsmanager
+      - DEFAULT_REGION=us-east-1
+      - LOCALSTACK_ACKNOWLEDGE_ACCOUNT_REQUIREMENT=1
+
+  vault:
+    image: hashicorp/vault:latest
+    ports:
+      - "8200:8200"
+    environment:
+      - VAULT_DEV_ROOT_TOKEN_ID=test-root-token
+      - VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8200
+    cap_add:
+      - IPC_LOCK

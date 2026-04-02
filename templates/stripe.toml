@@ -1,0 +1,16 @@
+# Stripe API
+#
+# Stripe uses Bearer token authentication for all API calls.
+# The secret key (sk_live_... or sk_test_...) is injected as an
+# Authorization: Bearer header on every request to api.stripe.com.
+#
+# Usage:
+#   1. Copy the [secrets.STRIPE_SECRET_KEY] block below into your vaulty.toml
+#   2. Run: vaulty set STRIPE_SECRET_KEY
+#   3. Paste your Stripe secret key when prompted
+#
+# Docs: https://docs.stripe.com/api/authentication
+
+[secrets.STRIPE_SECRET_KEY]
+allowed_domains = ["api.stripe.com"]
+inject_as = "bearer"

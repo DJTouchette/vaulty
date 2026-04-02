@@ -1,0 +1,16 @@
+# GitHub API
+#
+# GitHub uses Bearer token authentication for REST and GraphQL API calls.
+# A personal access token (ghp_... or github_pat_...) is injected as an
+# Authorization: Bearer header on every request to api.github.com.
+#
+# Usage:
+#   1. Copy the [secrets.GITHUB_TOKEN] block below into your vaulty.toml
+#   2. Run: vaulty set GITHUB_TOKEN
+#   3. Paste your GitHub personal access token when prompted
+#
+# Docs: https://docs.github.com/en/rest/authentication
+
+[secrets.GITHUB_TOKEN]
+allowed_domains = ["api.github.com"]
+inject_as = "bearer"

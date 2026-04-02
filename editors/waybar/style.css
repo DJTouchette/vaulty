@@ -1,0 +1,10 @@
+/* Vaulty waybar module styles.
+ * Append to ~/.config/waybar/style.css */
+
+#custom-vaulty.running {
+  color: #a6e3a1;
+}
+
+#custom-vaulty.stopped {
+  color: #f38ba8;
+}

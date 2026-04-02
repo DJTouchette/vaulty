@@ -1,0 +1,52 @@
+# Vaulty configuration
+# Copy this file to vaulty.toml (project root) or ~/.config/vaulty/vaulty.toml
+# This file stores policies only — never secret values. Safe to commit.
+
+[vault]
+path = "~/.config/vaulty/vault.age"   # encrypted secrets file
+idle_timeout = "8h"                    # auto-lock daemon after idle period
+socket = "/tmp/vaulty.sock"            # Unix socket path for daemon
+http_port = 19876                      # localhost HTTP port (0 to disable)
+
+# Each [secrets.<NAME>] section defines the access policy for a secret.
+# The secret value itself is stored in the encrypted vault, not here.
+
+# Bearer token injection (most common for REST APIs)
+[secrets.STRIPE_SECRET_KEY]
+allowed_domains = ["api.stripe.com"]
+inject_as = "bearer"                   # sets Authorization: Bearer <secret>
+
+[secrets.OPENAI_API_KEY]
+allowed_domains = ["api.openai.com"]
+inject_as = "bearer"
+
+# Custom header injection
+[secrets.RESEND_API_KEY]
+allowed_domains = ["api.resend.com"]
+inject_as = "header"                   # sets a custom header
+header_name = "X-API-Key"             # header name to use
+
+# Environment variable injection (for CLI tools)
+[secrets.DATABASE_URL]
+allowed_commands = ["psql", "prisma", "drizzle-kit", "pg_dump"]
+inject_as = "env"                      # injected as env var in child process
+
+# Multiple companion secrets injected together
+[secrets.AWS_SECRET_ACCESS_KEY]
+allowed_commands = ["aws", "cdk", "sst"]
+inject_as = "env"
+also_inject = ["AWS_ACCESS_KEY_ID"]    # these get injected alongside
+
+# Query parameter injection
+# [secrets.MAPS_API_KEY]
+# allowed_domains = ["maps.googleapis.com"]
+# inject_as = "query"                  # appends ?key=<secret> to URL
+
+# Basic auth injection
+# [secrets.REGISTRY_CREDENTIALS]
+# allowed_domains = ["registry.example.com"]
+# inject_as = "basic"                  # sets Authorization: Basic <base64(secret)>
+
+# Wildcard policy (no domain/command restrictions) — use for dev only
+# [secrets.DEV_TOKEN]
+# inject_as = "bearer"
