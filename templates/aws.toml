@@ -1,0 +1,29 @@
+# AWS CLI / SDK
+#
+# AWS authenticates via environment variables: AWS_SECRET_ACCESS_KEY and
+# AWS_ACCESS_KEY_ID. Both are injected together into the child process
+# environment when running allowed commands (aws, cdk, sst).
+#
+# The also_inject field ensures AWS_ACCESS_KEY_ID is always provided
+# alongside AWS_SECRET_ACCESS_KEY, since AWS requires both.
+#
+# Usage:
+#   1. Copy both [secrets.*] blocks below into your vaulty.toml
+#   2. Run: vaulty set AWS_SECRET_ACCESS_KEY
+#   3. Run: vaulty set AWS_ACCESS_KEY_ID
+#   4. Paste each value when prompted
+#
+# If you also use AWS_SESSION_TOKEN (for temporary credentials), add it
+# to the also_inject list and create a matching [secrets.AWS_SESSION_TOKEN]
+# block with the same allowed_commands.
+#
+# Docs: https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html
+
+[secrets.AWS_SECRET_ACCESS_KEY]
+allowed_commands = ["aws", "cdk", "sst"]
+inject_as = "env"
+also_inject = ["AWS_ACCESS_KEY_ID"]
+
+[secrets.AWS_ACCESS_KEY_ID]
+allowed_commands = ["aws", "cdk", "sst"]
+inject_as = "env"

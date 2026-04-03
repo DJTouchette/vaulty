@@ -1,0 +1,68 @@
+# Maintainer: DJ Touchette <djtouchette at users dot noreply dot github dot com>
+#
+# To generate .SRCINFO after editing this file, run:
+#   makepkg --printsrcinfo > .SRCINFO
+
+pkgname=vaulty
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="CLI tool for managing encrypted secrets"
+arch=('x86_64' 'aarch64')
+url="https://github.com/djtouchette/vaulty"
+license=('MIT')
+makedepends=('go' 'git')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/djtouchette/vaulty/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('SKIP')
+
+build() {
+  cd "${pkgname}-${pkgver}"
+  export CGO_CPPFLAGS="${CPPFLAGS}"
+  export CGO_CFLAGS="${CFLAGS}"
+  export CGO_CXXFLAGS="${CXXFLAGS}"
+  export CGO_LDFLAGS="${LDFLAGS}"
+  export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
+  go build \
+    -ldflags "-s -w -X main.version=${pkgver} -linkmode=external" \
+    -o "${pkgname}" \
+    ./cmd/vaulty
+}
+
+check() {
+  cd "${pkgname}-${pkgver}"
+  go test ./... -count=1
+}
+
+package() {
+  cd "${pkgname}-${pkgver}"
+  install -Dm755 "${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+
+  # Install systemd user service
+  install -Dm644 packaging/systemd/vaulty.service "${pkgdir}/usr/lib/systemd/user/vaulty.service"
+}
+
+_post_install_message() {
+  cat <<'MSG'
+
+  ==> To run Vaulty as a systemd user service:
+
+        systemctl --user daemon-reload
+        systemctl --user start vaulty
+
+      To start automatically on login:
+
+        systemctl --user enable vaulty
+
+      Note: Configure your passphrase first via 'vaulty keychain save'
+      or by setting VAULTY_PASSPHRASE with 'systemctl --user set-environment'.
+
+MSG
+}
+
+post_install() {
+  _post_install_message
+}
+
+post_upgrade() {
+  _post_install_message
+}

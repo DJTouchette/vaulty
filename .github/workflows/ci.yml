@@ -1,0 +1,105 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Build
+        run: go build ./cmd/vaulty
+
+      - name: Test
+        run: go test ./... -count=1
+
+      - name: Vet
+        run: go vet ./...
+
+  lint:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - uses: golangci/golangci-lint-action@v6
+        with:
+          version: latest
+
+  integration:
+    runs-on: ubuntu-latest
+    services:
+      localstack:
+        image: localstack/localstack:4.4
+        ports:
+          - 4566:4566
+        env:
+          SERVICES: secretsmanager
+          LOCALSTACK_ACKNOWLEDGE_ACCOUNT_REQUIREMENT: "1"
+      vault:
+        image: hashicorp/vault:latest
+        ports:
+          - 8200:8200
+        env:
+          VAULT_DEV_ROOT_TOKEN_ID: test-root-token
+          VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
+        options: --cap-add IPC_LOCK
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Install AWS CLI
+        run: |
+          curl -s "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o awscliv2.zip
+          unzip -q awscliv2.zip
+          sudo ./aws/install --update
+
+      - name: Install Vault CLI
+        run: |
+          curl -sLO "https://releases.hashicorp.com/vault/1.19.5/vault_1.19.5_linux_amd64.zip"
+          unzip -q vault_1.19.5_linux_amd64.zip
+          sudo mv vault /usr/local/bin/
+
+      - name: Wait for LocalStack
+        run: |
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:4566/_localstack/health > /dev/null 2>&1 && break
+            [ "$i" -eq 30 ] && { echo "LocalStack failed to start"; exit 1; }
+            sleep 2
+          done
+          echo "LocalStack ready"
+
+      - name: Wait for Vault
+        run: |
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:8200/v1/sys/health > /dev/null 2>&1 && break
+            [ "$i" -eq 30 ] && { echo "Vault failed to start"; exit 1; }
+            sleep 2
+          done
+          echo "Vault ready"
+
+      - name: Run integration tests
+        env:
+          AWS_ACCESS_KEY_ID: test
+          AWS_SECRET_ACCESS_KEY: test
+          VAULT_TOKEN: test-root-token
+        run: go test -tags=integration ./internal/backend/... -count=1 -v -timeout 120s

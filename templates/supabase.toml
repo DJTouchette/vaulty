@@ -1,0 +1,18 @@
+# Supabase API
+#
+# Supabase uses Bearer token authentication (the service_role key or
+# anon key) for requests to your project's API endpoint. The domain
+# pattern covers all Supabase-hosted projects (*.supabase.co).
+#
+# Usage:
+#   1. Copy the [secrets.SUPABASE_SERVICE_ROLE_KEY] block below into your vaulty.toml
+#   2. Optionally narrow allowed_domains to your specific project:
+#      allowed_domains = ["yourproject.supabase.co"]
+#   3. Run: vaulty set SUPABASE_SERVICE_ROLE_KEY
+#   4. Paste your Supabase service role key when prompted
+#
+# Docs: https://supabase.com/docs/guides/api/api-keys
+
+[secrets.SUPABASE_SERVICE_ROLE_KEY]
+allowed_domains = ["supabase.co"]
+inject_as = "bearer"

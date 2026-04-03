@@ -1,0 +1,23 @@
+# Generic Database Connection
+#
+# Database connection strings (postgres://, mysql://, etc.) are injected
+# as the DATABASE_URL environment variable into allowed CLI tools.
+# This covers common database migration and query tools.
+#
+# Usage:
+#   1. Copy the [secrets.DATABASE_URL] block below into your vaulty.toml
+#   2. Add or remove commands from allowed_commands to match your toolchain
+#   3. Run: vaulty set DATABASE_URL
+#   4. Paste your connection string when prompted
+#      (e.g., postgres://user:pass@host:5432/dbname)
+#
+# Common commands you might add:
+#   - "mysql"         MySQL CLI client
+#   - "mongosh"       MongoDB shell
+#   - "sqlite3"       SQLite CLI
+#   - "npx"           for running prisma/drizzle via npx
+#   - "bunx"          for running prisma/drizzle via bunx
+
+[secrets.DATABASE_URL]
+allowed_commands = ["psql", "prisma", "drizzle-kit", "pg_dump"]
+inject_as = "env"

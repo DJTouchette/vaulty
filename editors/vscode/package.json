@@ -1,0 +1,49 @@
+{
+  "name": "vaulty",
+  "displayName": "Vaulty - Secrets Proxy Status",
+  "description": "Monitor and control the Vaulty daemon directly from VS Code.",
+  "version": "0.1.0",
+  "publisher": "vaulty",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/djtouchette/vaulty"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "vaulty.showStatus",
+        "title": "Vaulty: Show Daemon Status"
+      },
+      {
+        "command": "vaulty.startDaemon",
+        "title": "Vaulty: Start Daemon"
+      },
+      {
+        "command": "vaulty.stopDaemon",
+        "title": "Vaulty: Stop Daemon"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.3.0"
+  }
+}

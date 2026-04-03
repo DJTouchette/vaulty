@@ -1,0 +1,17 @@
+# Cloudflare API
+#
+# Cloudflare uses Bearer token authentication for its API. An API token
+# (scoped to specific permissions) is injected as an Authorization: Bearer
+# header on every request to api.cloudflare.com.
+#
+# Usage:
+#   1. Copy the [secrets.CLOUDFLARE_API_TOKEN] block below into your vaulty.toml
+#   2. Run: vaulty set CLOUDFLARE_API_TOKEN
+#   3. Paste your Cloudflare API token when prompted
+#
+# Note: Use a scoped API token (not the legacy Global API Key).
+# Docs: https://developers.cloudflare.com/fundamentals/api/get-started/create-token/
+
+[secrets.CLOUDFLARE_API_TOKEN]
+allowed_domains = ["api.cloudflare.com"]
+inject_as = "bearer"

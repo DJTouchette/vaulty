@@ -1,0 +1,15 @@
+// Vaulty waybar custom module configuration.
+// Merge this into your ~/.config/waybar/config.jsonc (or config).
+//
+// Add "custom/vaulty" to the "modules-right" (or left/center) array
+// in your bar definition, then include the block below.
+{
+  "custom/vaulty": {
+    "exec": "~/.config/vaulty/vaulty-status.sh",
+    "return-type": "json",
+    "interval": 5,
+    "on-click": "vaulty start || vaulty stop",
+    "format": "{}",
+    "tooltip": true
+  }
+}

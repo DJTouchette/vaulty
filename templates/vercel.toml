@@ -1,0 +1,16 @@
+# Vercel API
+#
+# Vercel uses Bearer token authentication for its REST API. An access
+# token is injected as an Authorization: Bearer header on every request
+# to api.vercel.com.
+#
+# Usage:
+#   1. Copy the [secrets.VERCEL_TOKEN] block below into your vaulty.toml
+#   2. Run: vaulty set VERCEL_TOKEN
+#   3. Paste your Vercel access token when prompted
+#
+# Docs: https://vercel.com/docs/rest-api#authentication
+
+[secrets.VERCEL_TOKEN]
+allowed_domains = ["api.vercel.com"]
+inject_as = "bearer"

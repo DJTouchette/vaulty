@@ -1,0 +1,16 @@
+# OpenAI API
+#
+# OpenAI uses Bearer token authentication for all API calls.
+# The API key (sk-...) is injected as an Authorization: Bearer header
+# on every request to api.openai.com.
+#
+# Usage:
+#   1. Copy the [secrets.OPENAI_API_KEY] block below into your vaulty.toml
+#   2. Run: vaulty set OPENAI_API_KEY
+#   3. Paste your OpenAI API key when prompted
+#
+# Docs: https://platform.openai.com/docs/api-reference/authentication
+
+[secrets.OPENAI_API_KEY]
+allowed_domains = ["api.openai.com"]
+inject_as = "bearer"
