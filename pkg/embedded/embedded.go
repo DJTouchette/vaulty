@@ -1,5 +1,5 @@
-// Package app exports vaulty's CLI command tree for embedding in other tools.
-package app
+// Package embedded exports vaulty's CLI command tree for embedding in other tools.
+package embedded
 
 import (
 	"github.com/djtouchette/vaulty/internal/cli"
